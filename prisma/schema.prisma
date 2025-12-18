@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// User Role Enum
+enum Role {
+  WAREHOUSE
+  DEALER
+  ADMIN
+}
+
+// Shipment Status Enum
+enum ShipmentStatus {
+  PENDING
+  ASSIGNED
+  IN_TRANSIT
+  DELIVERED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  clerkUserId  String   @unique // This links to Clerk
+  email        String   @unique
+  role         Role     @default(WAREHOUSE)
+  name         String?
+  phone        String?
+  createdAt    DateTime @default(now())
+
+  // Relations
+  trucks       Truck[]
+  shipments    Shipment[]
+}
+
+model Truck {
+  id              String   @id @default(uuid())
+  licensePlate    String   @unique
+  truckType       String   // e.g., "Container", "Van"
+  capacityWeight  Float    // in kg
+  capacityVolume  Float    // in cubic meters
+  fuelEfficiency  Float    // km per liter (for CO2 calc)
+  costPerKm       Float    // Base rate
+  isAvailable     Boolean  @default(true)
+  
+  // Relations
+  dealerId        String
+  dealer          User     @relation(fields: [dealerId], references: [id])
+  shipments       Shipment[] // Trucks can have history of shipments
+}
+
+model Shipment {
+  id              String         @id @default(uuid())
+  origin          String
+  destination     String
+  distance        Float?         // We will calculate this later
+  totalWeight     Float          // in kg
+  totalVolume     Float          // in cubic meters
+  status          ShipmentStatus @default(PENDING)
+  
+  // Costs & Efficiency (Calculated after optimization)
+  estimatedCost   Float?
+  co2Saved        Float?
+
+  createdAt       DateTime       @default(now())
+  requiredBy      DateTime?
+
+  // Relations
+  warehouseId     String
+  warehouse       User           @relation(fields: [warehouseId], references: [id])
+  
+  assignedTruckId String?
+  assignedTruck   Truck?         @relation(fields: [assignedTruckId], references: [id])
+}
