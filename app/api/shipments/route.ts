@@ -73,29 +73,85 @@ export async function POST(req: Request) {
 
 // ... existing POST code above ...
 
+// ... imports and POST method remain the same ...
+
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    const { shipmentId, truckId } = body;
+    const { shipmentId, truckId, status } = body;
 
-    // 1. Update the Shipment
-    // We link the truck and change status to ASSIGNED
-    const updatedShipment = await db.shipment.update({
-      where: { id: shipmentId },
-      data: {
-        assignedTruckId: truckId,
-        status: "ASSIGNED",
-      },
-    });
+    // SCENARIO 1: BOOKING (Existing logic)
+    if (truckId && !status) {
+      const updatedShipment = await db.shipment.update({
+        where: { id: shipmentId },
+        data: {
+          assignedTruckId: truckId,
+          status: "ASSIGNED",
+        },
+      });
+      // Mark truck as busy
+      await db.truck.update({
+        where: { id: truckId },
+        data: { isAvailable: false },
+      });
+      return NextResponse.json(updatedShipment);
+    }
 
-    // 2. (Optional) Mark Truck as Unavailable
-    // If you want to stop double-booking, you can set isAvailable = false
-    await db.truck.update({
-      where: { id: truckId },
-      data: { isAvailable: false },
-    });
+    // SCENARIO 2: STATUS UPDATE (New Logic for Tracking)
+    if (status) {
+      let updateData: any = { status };
 
-    return NextResponse.json(updatedShipment);
+      // If completing the trip, calculate final stats
+      if (status === "DELIVERED") {
+        // 1. Fetch shipment to get distance/weight details
+        const shipment = await db.shipment.findUnique({
+          where: { id: shipmentId },
+          include: { assignedTruck: true }
+        });
+
+        if (shipment && shipment.assignedTruck) {
+           // --- THE MATH ---
+           // Assume standard market rate is ₹8/km/kg. We optimized it.
+           const distance = 500; // Hardcoded for demo, or use shipment.distance
+           
+           // Actual Cost
+           const actualCost = distance * shipment.assignedTruck.costPerKm;
+           
+           // Market Cost (Higher)
+           const marketCost = actualCost * 1.3; // We assume we saved them 30%
+           const savings = marketCost - actualCost;
+
+           // CO2 Calculation (Standard: 2.68kg CO2 per liter diesel)
+           // Formula: (Distance / FuelEfficiency) * 2.68
+           const fuelUsed = distance / shipment.assignedTruck.fuelEfficiency;
+           const co2Emitted = fuelUsed * 2.68;
+           const co2Saved = co2Emitted * 0.2; // Assume we saved 20% vs empty running
+
+           updateData = {
+             status: "DELIVERED",
+             estimatedCost: actualCost,
+             co2Saved: parseFloat(co2Saved.toFixed(2)),
+             requiredBy: new Date(), // Set delivery time
+           };
+
+           // Free up the truck again
+           await db.truck.update({
+             where: { id: shipment.assignedTruckId! },
+             data: { isAvailable: true }
+           });
+        }
+      }
+
+      const updatedShipment = await db.shipment.update({
+        where: { id: shipmentId },
+        data: updateData,
+      });
+
+      return NextResponse.json(updatedShipment);
+    }
+
+    return new NextResponse("Invalid Request", { status: 400 });
+
   } catch (error) {
     console.log("[SHIPMENT_PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });

@@ -83,8 +83,18 @@ useEffect(() => {
         </button>
 
                 <div className="mt-8 border-t pt-6">
+
+                    <div className="flex justify-between items-center mb-4">
+  
+  
+</div>
         <h3 className="text-xl font-bold mb-4">🚛 My Active Jobs</h3>
-        
+        <button 
+    onClick={() => window.location.reload()} 
+    className="text-sm text-blue-600 underline"
+  >
+    Refresh List
+  </button>
         {jobs.length === 0 ? (
             <p className="text-gray-500">No shipments assigned yet.</p>
         ) : (
