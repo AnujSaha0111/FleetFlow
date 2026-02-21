@@ -1,6 +1,7 @@
 # FleetFlow 🚛
 
-> **A Modern Fleet & Logistics Management System Prototype**
+> **A Modern Fleet & Logistics Management System Prototype**  
+> **Built for Odoo Hackathon Virtual Round**
 
 FleetFlow is a comprehensive, modular fleet and logistics management system built with cutting-edge web technologies. This prototype demonstrates end-to-end fleet operations management with role-based access control, real-time data synchronization, and intelligent business logic.
 
@@ -16,13 +17,13 @@ FleetFlow is a comprehensive, modular fleet and logistics management system buil
 ## 📖 Table of Contents
 
 - [About the Project](#-about-the-project)
+- [Hackathon & Team](#-hackathon--team)
 - [Features Implemented](#-features-implemented)
 - [Tech Stack](#-tech-stack)
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
 - [Known Limitations](#-known-limitations)
 - [Future Roadmap](#-future-roadmap)
-- [Deployment](#-deployment)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -39,6 +40,31 @@ FleetFlow is a comprehensive, modular fleet and logistics management system buil
 ✅ **Real-Time Sync**: Redux Toolkit state management with Supabase backend  
 ✅ **Production Ready**: TypeScript for type safety, Material-UI for consistent design  
 ✅ **Comprehensive Analytics**: Financial metrics, operational KPIs, fleet utilization insights
+
+---
+
+## 🏆 Hackathon & Team
+
+### **Odoo Hackathon Virtual Round**
+
+This project was developed as part of the **Odoo Hackathon Virtual Round**. Our team collaborated to design, develop, and deploy this full-stack prototype within the hackathon timeline.
+
+### **👥 Team Members**
+
+- **Anuj Saha**
+- **Krishna Rathore**
+- **Divyanshu Ghosh**
+- **G Nikhil**
+
+### **🎯 Project Highlights**
+
+- ✅ **8 Core Modules**: Authentication, Dashboard, Vehicles, Drivers, Trips, Maintenance, Fuel, Analytics
+- ✅ **Role-Based System**: Manager and Dispatcher access levels with tailored permissions
+- ✅ **Business Logic**: Implemented cargo capacity checks, license validation, automated workflows
+- ✅ **Modern Tech Stack**: React 19, TypeScript 5.5, Material-UI 7, Firebase, Supabase
+- ✅ **Production Deployment**: Successfully deployed on Vercel with optimized build
+
+We're proud to present FleetFlow as our solution to the hackathon challenge, demonstrating both technical expertise and practical problem-solving.
 
 ---
 
@@ -209,7 +235,7 @@ expenses (id, vehicle_id, category, description, amount, date)
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/fleetflow.git
+   git clone https://github.com/AnujSaha0111/FleetFlow.git
    cd FleetFlow
    ```
 
@@ -227,7 +253,7 @@ expenses (id, vehicle_id, category, description, amount, date)
 
 4. **Set up Supabase**
    - Create a new Supabase project
-   - Run the database schema (see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md))
+   - Run the database schema
    - Copy your Supabase URL and anon key
 
 5. **Configure environment variables**
@@ -318,8 +344,7 @@ fleetflow/
 ├── package.json                         # Dependencies and scripts
 ├── tsconfig.json                        # TypeScript configuration
 ├── vite.config.ts                       # Vite build configuration
-├── README.md                            # This file
-└── DEPLOYMENT_GUIDE.md                  # Comprehensive deployment guide
+├── README.md                            
 ```
 
 ---
@@ -379,122 +404,9 @@ fleetflow/
 
 ## 🗺️ Future Roadmap
 
-### **Phase 1: Production Hardening** (Essential for Real-World Use)
-
-#### 🏢 Multi-Tenancy & Data Isolation
-
-- [ ] Add organization/company entity
-- [ ] Organization registration and onboarding flow
-- [ ] User invitation system with email verification
-- [ ] Organization-scoped data access (RLS policies)
-- [ ] Organization admin dashboard for user management
-
-#### 🔒 Enhanced Security
-
-- [ ] Row Level Security (RLS) policies on Supabase
-- [ ] API rate limiting
-- [ ] Input sanitization and validation
-- [ ] Audit logging (who did what, when)
-- [ ] Two-factor authentication (2FA)
-- [ ] Session timeout and security policies
-
-#### 👥 Advanced User Management
-
-- [ ] User profiles with avatars
-- [ ] Password reset flow
-- [ ] Email verification
-- [ ] Fine-grained role-based permissions
-- [ ] User activity logs
-
----
-
-### **Phase 2: Enhanced Features** (Nice to Have)
-
-#### 📊 Advanced Analytics & Reporting
-
-- [ ] **Interactive Charts**: Recharts/Chart.js integration
-  - Revenue trends over time (line charts)
-  - Expense breakdown (pie charts)
-  - Fleet utilization timeline (bar charts)
-- [ ] **Export Capabilities**: PDF, Excel, CSV exports
-- [ ] **Custom Date Ranges**: Compare periods, YoY analysis
-- [ ] **Scheduled Reports**: Email weekly/monthly summaries
-- [ ] **Predictive Analytics**: Maintenance predictions, fuel trend forecasting
-
-#### 🔔 Notifications & Alerts
-
-- [ ] **Email Notifications**:
-  - Maintenance due reminders
-  - License expiry alerts (7 days, 1 day before)
-  - Trip completion confirmations
-- [ ] **Push Notifications**: Browser notifications for critical alerts
-- [ ] **SMS Integration**: Twilio for driver notifications
-- [ ] **In-App Notification Center**: Bell icon with notification history
-
-#### 🗺️ GPS & Route Optimization
-
-- [ ] **Real-Time GPS Tracking**: Integrate Google Maps/Mapbox
-- [ ] **Route Visualization**: Display trip routes on map
-- [ ] **Route Optimization**: Suggest optimal routes (Google Directions API)
-- [ ] **Geofencing**: Alerts when vehicles enter/exit zones
-- [ ] **Live Location Sharing**: For dispatchers to track active trips
-
-#### 📱 Mobile Applications
-
-- [ ] **React Native Mobile App**:
-  - Driver app for trip updates
-  - Photo uploads (delivery proof, damage reports)
-  - Digital signatures for deliveries
-  - Offline mode with sync
-- [ ] **Progressive Web App (PWA)**: Offline-capable web app
-
-#### 🤖 Automation & Integrations
-
-- [ ] **Scheduled Tasks**:
-  - Auto-create recurring maintenance
-  - Auto-send license expiry reminders
-- [ ] **Third-Party Integrations**:
-  - Accounting software (QuickBooks, Xero)
-  - Fuel card APIs for automatic fuel log import
-  - Vehicle telematics systems
-- [ ] **Webhooks**: External system notifications
-
----
-
-### **Phase 3: Advanced Capabilities** (Long-Term Vision)
-
-#### 🧠 Intelligent Features
-
-- [ ] **Predictive Maintenance**: ML models to predict when maintenance is due
-- [ ] **Fuel Price Optimization**: Suggest cheapest nearby fuel stations
-- [ ] **Driver Performance Scoring**: AI-based scoring from trip data
-- [ ] **Load Optimization**: Suggest optimal cargo distribution
-- [ ] **Demand Forecasting**: Predict future trip volumes
-
-#### 🌍 Enterprise Features
-
-- [ ] **Multi-Location Support**: Manage fleets across cities/regions
-- [ ] **Hierarchical Organizations**: Parent-child company relationships
-- [ ] **White-Label Solution**: Rebrandable for different companies
-- [ ] **API for Third Parties**: RESTful API with authentication
-- [ ] **SSO Integration**: SAML, OAuth for enterprise authentication
-
-#### 🎨 User Experience Enhancements
-
-- [ ] **Dark Mode**: System-wide dark theme
-- [ ] **Multi-Language Support**: i18n for global users
-- [ ] **Accessibility (A11y)**: WCAG 2.1 AA compliance
-- [ ] **Customizable Dashboards**: Drag-and-drop widget arrangement
-- [ ] **Saved Views**: Custom filters and column arrangements
-
-#### ⚡ Performance & Scaling
-
-- [ ] **Database Optimization**: Indexes, query optimization
-- [ ] **Caching Layer**: Redis for frequently accessed data
-- [ ] **CDN Integration**: Cloudflare for static assets
-- [ ] **Load Balancing**: Multi-instance deployment
-- [ ] **Infinite Scroll/Pagination**: For large datasets
-- [ ] **Background Jobs**: Queue system for heavy operations
+- **Multi-Tenancy & Organization Management**: Implement organization-based data isolation with Row Level Security (RLS) policies, user invitation system, and organization admin dashboard for production-ready multi-company support
+- **Real-Time GPS Tracking & Route Optimization**: Integrate Google Maps/Mapbox for live vehicle tracking, route visualization, geofencing alerts, and intelligent route optimization
+- **Advanced Analytics & Mobile App**: Build interactive charts with export capabilities (PDF/Excel), predictive maintenance using ML models, and React Native mobile app for drivers with offline support
 
 ---
 
@@ -554,20 +466,10 @@ MIT License - Copyright (c) 2026 FleetFlow
 
 ---
 
-## 🙏 Acknowledgments
-
-- **Material-UI Team** for the comprehensive component library
-- **Firebase Team** for authentication and Firestore services
-- **Supabase Team** for the amazing PostgreSQL platform
-- **React & TypeScript Communities** for excellent documentation and support
-- **Vite Team** for the blazing fast build tool
-
----
-
 ## 📞 Contact & Support
 
-- **GitHub Issues**: [Create an issue](https://github.com/yourusername/fleetflow/issues)
-- **Email**: anujsahabest0111@gmail.com (if applicable)
+- **GitHub Issues**: [Create an issue](https://github.com/AnujSaha0111/FleetFlow/issues)
+- **Email**: anujsahabest0111@gmail.com
 
 ---
 
@@ -581,6 +483,8 @@ It helps others discover this project and motivates further development.
 
 <div align="center">
 
-**Built with ❤️ for efficient fleet management**
+**Built with ❤️ by Team FleetFlow for Odoo Hackathon**
+
+*Anuj Saha • Krishna Rathore • Divyanshu Ghosh • G Nikhil*
 
 </div>
