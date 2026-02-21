@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import Navbar from "@/components/Navbar"; // Import the Navbar
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +24,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           {/* 1. The Navbar sits at the top */}
-          <Navbar /> 
+          {/* <Navbar />  */}
           
           {/* 2. The main content (Dashboard, Home, etc.) goes below */}
           <main className="min-h-screen bg-gray-50">

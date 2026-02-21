@@ -1,70 +1,49 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId");
-  const role = searchParams.get("role"); // 'WAREHOUSE' or 'DEALER'
-
-  if (!userId || !role) return new NextResponse("Missing Params", { status: 400 });
-
+export async function GET() {
   try {
-    let shipments = [];
+    const vehicles = await db.vehicle.findMany({
+      include: {
+        fuelLogs: true,
+        maintenanceLogs: true,
+      },
+      orderBy: { name: "asc" }
+    });
 
-    // 1. Fetch Data based on Role
-    if (role === "WAREHOUSE") {
-      shipments = await db.shipment.findMany({
-        where: { warehouseId: userId, status: "DELIVERED" },
-        include: { assignedTruck: true },
-        orderBy: { createdAt: 'asc' }
-      });
-    } else {
-      // For Dealers, find shipments assigned to THEIR trucks
-      shipments = await db.shipment.findMany({
-        where: { 
-          assignedTruck: { dealerId: userId },
-          status: "DELIVERED" 
-        },
-        include: { assignedTruck: true },
-        orderBy: { createdAt: 'asc' }
-      });
-    }
+    // Process and aggregate the data for the frontend
+    const analyticsData = vehicles.map((v) => {
+      // 1. Sum up Fuel
+      const totalFuelLiters = v.fuelLogs.reduce((sum, log) => sum + log.liters, 0);
+      const totalFuelCost = v.fuelLogs.reduce((sum, log) => sum + log.cost, 0);
 
-    // 2. Calculate Metrics
-    const totalMoves = shipments.length;
-    
-    // Sum of Money
-    const totalMoney = shipments.reduce((acc, curr) => acc + (curr.estimatedCost || 0), 0);
-    
-    // Sum of CO2
-    const totalCO2 = shipments.reduce((acc, curr) => acc + (curr.co2Saved || 0), 0);
+      // 2. Sum up Maintenance
+      const totalMaintenanceCost = v.maintenanceLogs.reduce((sum, log) => sum + log.cost, 0);
 
-    // Calculate Average Utilization per Trip
-    let utilizationSum = 0;
-    const chartData = shipments.map((s, index) => {
-      const truckVol = s.assignedTruck?.capacityVolume || 1;
-      const util = Math.round((s.totalVolume / truckVol) * 100);
-      utilizationSum += util;
-      
+      // 3. Calculate Operational Cost
+      const totalOperationalCost = totalFuelCost + totalMaintenanceCost;
+
+      // 4. Calculate Efficiency Metrics (Prevent division by zero)
+      const fuelEfficiency = totalFuelLiters > 0 ? (v.odometer / totalFuelLiters) : 0;
+      const costPerKm = v.odometer > 0 ? (totalOperationalCost / v.odometer) : 0;
+
       return {
-        label: `Trip ${index + 1}`,
-        value: util, // Plot Utilization %
-        cost: s.estimatedCost
+        id: v.id,
+        name: v.name,
+        licensePlate: v.licensePlate,
+        odometer: v.odometer,
+        totalFuelLiters,
+        totalFuelCost,
+        totalMaintenanceCost,
+        totalOperationalCost,
+        fuelEfficiency: fuelEfficiency.toFixed(2), // km/L
+        costPerKm: costPerKm.toFixed(2),           // ₹/km
       };
     });
 
-    const avgUtilization = totalMoves > 0 ? Math.round(utilizationSum / totalMoves) : 0;
-
-    return NextResponse.json({
-      totalMoves,
-      totalMoney,
-      totalCO2,
-      avgUtilization,
-      chartData // Array for the graph
-    });
-
+    return NextResponse.json(analyticsData);
   } catch (error) {
-    console.log("[ANALYTICS]", error);
+    console.error("[ANALYTICS_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
