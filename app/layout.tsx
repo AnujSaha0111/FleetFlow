@@ -7,8 +7,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Smart Logistics Platform",
-  description: "AI-Powered Truck Loading Optimization",
+  title: "Fleet Flow",
+  description: "Modular Fleet & Logistics Management System",
   icons: {
     icon: "/icon.png", // Path to your file in public folder
   },
