@@ -47,7 +47,7 @@ FleetFlow is a comprehensive, modular fleet and logistics management system buil
 
 ### **Odoo Hackathon Virtual Round**
 
-This project was developed as part of the **Odoo Hackathon Virtual Round**. Our team collaborated to design, develop, and deploy this full-stack prototype within the hackathon timeline.
+This project was developed as part of the **Odoo x Gujarat Vidyapith Hackathon '26 Virtual Round**. Our team collaborated to design, develop, and deploy this full-stack prototype within the hackathon timeline.
 
 ### **👥 Team Members**
 
