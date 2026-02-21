@@ -1,6 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
+  PieChart, Pie, Cell 
+} from "recharts";
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<any[]>([]);
@@ -22,26 +26,30 @@ export default function AnalyticsPage() {
   const fleetTotalCost = data.reduce((sum, v) => sum + v.totalOperationalCost, 0);
   const fleetAvgCostPerKm = fleetTotalOdo > 0 ? (fleetTotalCost / fleetTotalOdo).toFixed(2) : "0.00";
 
+  // Chart Data Preparation
+  const fleetTotalFuelCost = data.reduce((sum, v) => sum + v.totalFuelCost, 0);
+  const fleetTotalMaintenanceCost = data.reduce((sum, v) => sum + v.totalMaintenanceCost, 0);
+  
+  const pieChartData = [
+    { name: "Fuel Costs", value: fleetTotalFuelCost },
+    { name: "Maintenance Costs", value: fleetTotalMaintenanceCost }
+  ];
+  const PIE_COLORS = ["#3b82f6", "#ef4444"]; // Blue for Fuel, Red for Maintenance
+
+  const barChartData = data.map(v => ({
+    name: v.name,
+    CostPerKm: parseFloat(v.costPerKm),
+  }));
+
   // CSV Export Function
   const exportToCSV = () => {
     const headers = ["Vehicle", "License Plate", "Odometer (km)", "Total Fuel (L)", "Fuel Cost", "Maintenance Cost", "Total Cost", "Efficiency (km/L)", "Cost per km"];
     const rows = data.map(v => [
-      v.name, 
-      v.licensePlate, 
-      v.odometer, 
-      v.totalFuelLiters, 
-      v.totalFuelCost, 
-      v.totalMaintenanceCost, 
-      v.totalOperationalCost, 
-      v.fuelEfficiency, 
-      v.costPerKm
+      v.name, v.licensePlate, v.odometer, v.totalFuelLiters, v.totalFuelCost, 
+      v.totalMaintenanceCost, v.totalOperationalCost, v.fuelEfficiency, v.costPerKm
     ]);
 
-    const csvContent = [
-      headers.join(","),
-      ...rows.map(e => e.join(","))
-    ].join("\n");
-
+    const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
@@ -86,8 +94,57 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
+      {/* Graphical Data Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Bar Chart: Cost Per Km by Vehicle */}
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">Cost per km by Vehicle</h3>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                <Tooltip 
+                  cursor={{ fill: '#f3f4f6' }} 
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                />
+                <Bar dataKey="CostPerKm" fill="#10b981" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Pie Chart: Fuel vs Maintenance Breakdown */}
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">Operational Expense Breakdown</h3>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieChartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                <Legend verticalAlign="bottom" height={36} iconType="circle" />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
       {/* Detailed Data Table */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        {/* ... (Existing table code remains exactly the same) ... */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
