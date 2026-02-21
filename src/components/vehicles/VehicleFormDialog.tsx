@@ -282,7 +282,7 @@ const VehicleFormDialog: React.FC<VehicleFormDialogProps> = ({
               helperText={errors.acquisitionCost}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
+                  <InputAdornment position="start">₹</InputAdornment>
                 ),
               }}
               inputProps={{ min: 0, step: 1000 }}

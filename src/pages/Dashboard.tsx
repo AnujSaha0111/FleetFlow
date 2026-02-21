@@ -462,7 +462,7 @@ const Dashboard: React.FC = () => {
                   Total Revenue
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ mt: 1 }}>
-                  ${kpis.totalRevenue.toLocaleString()}
+                  ₹{kpis.totalRevenue.toLocaleString()}
                 </Typography>
               </Box>
             </Grid>
@@ -483,7 +483,7 @@ const Dashboard: React.FC = () => {
                   Total Expenses
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ mt: 1 }}>
-                  ${kpis.totalExpenses.toLocaleString()}
+                  ₹{kpis.totalExpenses.toLocaleString()}
                 </Typography>
               </Box>
             </Grid>
@@ -504,7 +504,7 @@ const Dashboard: React.FC = () => {
                   Net Profit
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" sx={{ mt: 1 }}>
-                  ${(kpis.totalRevenue - kpis.totalExpenses).toLocaleString()}
+                  ₹{(kpis.totalRevenue - kpis.totalExpenses).toLocaleString()}
                 </Typography>
               </Box>
             </Grid>
