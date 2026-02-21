@@ -23,7 +23,7 @@ import {
   LocalGasStation as FuelIcon,
   Build as MaintenanceIcon,
   Assessment as AnalyticsIcon,
-  AttachMoney as MoneyIcon,
+  CurrencyRupee as MoneyIcon,
   Speed as SpeedIcon,
 } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
